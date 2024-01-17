@@ -1,18 +1,13 @@
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
 
-import { CheckoutList, CheckoutPaypal, CheckoutStripeForm } from '@/components/checkout';
+import { CheckoutList, PesapalCheckout } from '@/components/checkout';
 import { Meta } from '@/components/core';
 import WithAuth from '@/components/core/WithAuth';
 import { ErrorMessage, Container } from '@/components/ui';
 import useCart from '@/hooks/cart/use-cart';
 import styles from '@/styles/Checkout.module.css';
 import calculateCartTotal from '@/utils/calculateCartTotal';
-import { STRIPE_CLIENT_KEY } from '@/utils/constants';
 import formatPrice from '@/utils/formatPrice';
-
-const stripePromise = loadStripe(STRIPE_CLIENT_KEY);
 
 const Checkout = () => {
   const { data, error } = useCart();
@@ -45,14 +40,17 @@ const Checkout = () => {
           </div>
           <div className={styles.right}>
             <h2> Payment Method </h2>
-            <Elements stripe={stripePromise}>
-              <CheckoutStripeForm />
-            </Elements>
+            <PesapalCheckout
+              onError={() => {
+                // Handle error logic
+              }}
+            />
+            {/**
             <div className={styles.withOr}>
               <span className={styles.line}></span> <span className={styles.middle}>or</span>
               <span className={styles.line}></span>
             </div>
-            <CheckoutPaypal />
+             */}
           </div>
         </div>
       </Container>

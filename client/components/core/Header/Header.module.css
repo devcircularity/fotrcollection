@@ -28,6 +28,18 @@
   justify-content: flex-end;
 }
 
+.logo {
+  margin-right: 1rem; /* Adjust the margin as needed */
+}
+
+.logoImage {
+  width: 120px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+  border: 2px solid black; /* Add a black border */
+  padding: 5px; /* Optional: Add padding for better visual appearance */
+}
+
+
 @media only screen and (min-width: 1024px) {
   .headerWrapper {
     padding: 0;
