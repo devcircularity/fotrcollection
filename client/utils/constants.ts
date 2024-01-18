@@ -2,7 +2,7 @@ export const IS_PROD = process.env.NODE_ENV === 'production';
 
 export const API_URL = IS_PROD
   ? 'https://ckbcollections.circularityspace.com/api'
-  : 'http://localhost:5453/api';
+  : 'http://localhost:5553/api';
 
 export const GOOGLE_CLIENT_ID = `${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`;
 

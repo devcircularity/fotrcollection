@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5454",
+    "dev": "next dev -p 5554",
     "build": "next build",
-    "start": "next start-p 5454 ",
+    "start": "next start-p 5554 ",
     "lint": "next lint",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./ --ignore-path .gitignore",
     "prepare": "cd .. && husky install client/.husky",

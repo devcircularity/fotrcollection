@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaGithub, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaYoutube, FaTwitter } from 'react-icons/fa';
 
 import styles from './Footer.module.css';
 
@@ -7,21 +7,30 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.content}>
-        <p>© 2020 Dress Shop. All rights reserved.</p>
+        <p>© 2023 Carole Kinoti Brand. All rights reserved.</p>
         <ul className={styles.links}>
           <li>
-            <a href="#">
+            <a href="https://www.facebook.com/ckinoti/">
               <FaFacebook size={22} />
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="https://www.instagram.com/carole_kinoti/">
               <FaInstagram size={22} />
             </a>
           </li>
           <li>
-            <a href="https://github.com/jrussumbrella/dress-shop/" target="_blank" rel="noreferrer">
-              <FaGithub size={22} />
+            <a
+              href="https://www.youtube.com/channel/UCrbRwEmt0xaBZCIbiNIh7Tg"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaYoutube size={22} />
+            </a>
+          </li>
+          <li>
+            <a href="https://twitter.com/your-twitter" target="_blank" rel="noreferrer">
+              <FaTwitter size={22} />
             </a>
           </li>
         </ul>

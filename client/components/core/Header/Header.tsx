@@ -1,7 +1,5 @@
-/* eslint-disable import/order */
-import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 
 import DesktopMenu from '../DesktopMenu';
 import MobileMenu from '../MobileMenu';
@@ -15,17 +13,11 @@ const Header = () => {
         <ul className={styles.headerWrapper}>
           <Link href="https://carolekinoti.co.ke">
             <a className={styles.logo}>
-              <Image
-                src="/log.png"
-                alt="Logo"
-                className={styles.logoImage}
-                width={100}
-                height={50}
-              />
+              <img src="./log.png" alt="Logo" className={styles.logoImage} />
             </a>
           </Link>
           <Link href="/">
-            <a className={styles.siteTitle}>CKB Collection</a>
+            <a className={styles.siteTitle}>FOTR Collection</a>
           </Link>
           <div className={styles.headerRight}>
             <DesktopMenu />
