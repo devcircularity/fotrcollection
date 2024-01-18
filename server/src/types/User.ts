@@ -7,5 +7,7 @@ export type User = {
   imageURL?: string;
   password: string;
   role: Role;
+  phoneNumber: string; // Ensure phoneNumber is not optional (?)
   carts: string[];
 };
+

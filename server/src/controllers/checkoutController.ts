@@ -1,8 +1,12 @@
+// controllers/checkoutController.ts
+
 import { Request, Response } from 'express';
 import { Cart, Order } from '../models';
 import { User as UserType } from '../types';
 import { createPaymentIntent } from '../lib/stripe';
 import { client } from '../lib/paypal';
+import { authenticatePesapal, submitPesapalOrder } from '../lib/pesapal';
+
 const paypal = require('@paypal/checkout-server-sdk');
 
 const getCart = async (req: Request) => {
@@ -49,9 +53,7 @@ export const createStripeCharge = async (req: Request, res: Response) => {
     const order = await createOrder(user._id, totalAmount, 'stripe');
     res.status(200).json({ data: order });
   } catch (error) {
-    res
-      .status(500)
-      .send({ message: 'Unexpected error occured. Please try again later.' });
+    res.status(500).send({ message: 'Unexpected error occurred. Please try again later.' });
   }
 };
 
@@ -75,9 +77,7 @@ export const createPaypalTransaction = async (req: Request, res: Response) => {
   try {
     order = await client().execute(request);
   } catch (err) {
-    return res
-      .status(500)
-      .send({ message: 'Unexpected error occured. Please try again later.' });
+    return res.status(500).send({ message: 'Unexpected error occurred. Please try again later.' });
   }
 
   res.status(200).json({
@@ -91,7 +91,6 @@ export const capturePaypalTransaction = async (req: Request, res: Response) => {
   const user = req.user as UserType;
   const orderID = req.body.orderID;
 
-  // 3. Call PayPal to capture the order
   const request = new paypal.orders.OrdersCaptureRequest(orderID);
   request.requestBody({});
 
@@ -105,6 +104,63 @@ export const capturePaypalTransaction = async (req: Request, res: Response) => {
     return res.send(500);
   }
 
-  // 6. Return a successful response to the client
   res.send(200);
 };
+
+// controllers/checkoutController.ts
+
+export const createPesapalTransaction = async (req: Request, res: Response) => {
+  const user = req.user as UserType;
+  try {
+    const token = await authenticatePesapal();
+    const totalAmount = await calculateCartTotal(req);
+
+    // Log the totalAmount to verify
+    console.log('Total Amount:', totalAmount);
+
+    console.log('User Details:', user);
+
+
+    // Modify the requestBody to use user's information
+    const requestBody = {
+      id: `ORDER_${Date.now()}`,
+      currency: 'USD',
+      amount: totalAmount.toFixed(2),
+      description: 'Payment description goes here',
+      callback_url: 'http://localhost:3000/',
+      notification_id: process.env.PESAPAL_NOTIFICATION_ID,
+      branch: 'Store Name - HQ',
+      billing_address: {
+        email_address: user.email, // Use user's email
+        phone_number: user.phoneNumber, // Use user's phone number
+        country_code: 'US', // You might want to retrieve the user's country code from their profile
+        first_name: user.name, // Use user's name
+      },
+    };
+
+    const pesapalResponse = await submitPesapalOrder(token, user._id, requestBody);
+
+    console.log('Pesapal Response:', pesapalResponse);
+
+    const { order_tracking_id, merchant_reference, redirect_url } = pesapalResponse;
+
+    // Ensure the response structure includes 'order_tracking_id'
+    if (!order_tracking_id) {
+      throw new Error('Missing order_tracking_id in Pesapal response');
+    }
+    console.log('Pesapal order_tracking_id:', order_tracking_id);
+
+    res.status(200).json({
+      data: {
+        order_tracking_id,
+        redirect_url,
+        // ... (any other relevant data)
+      },
+    });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).send({ message: 'Unexpected error occurred. Please try again later.' });
+  }
+};
+
+

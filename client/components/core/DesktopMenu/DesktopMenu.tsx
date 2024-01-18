@@ -26,7 +26,18 @@ const DesktopMenu = () => {
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
+    if (theme !== 'light') {
+      setTheme('light');
+    }
+  }, [theme, setTheme]);
+
+  useEffect(() => {
     window.addEventListener('click', handleClickOutSide);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('click', handleClickOutSide);
+    };
   }, []);
 
   const handleClickOutSide = (e: Event) => {
