@@ -1,5 +1,6 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { CategoryService } from '@/services/CategoryService';
+import { Category } from '@/types';
 import styles from './SearchCategory.module.css';
 
 interface Props {
@@ -8,25 +9,34 @@ interface Props {
 }
 
 const SearchCategory = ({ active, onChangeTab }: Props) => {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await CategoryService.getCategories();
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error('Failed to fetch categories', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
-    <>
-      <div className={styles.tab}>
+    <div className={styles.tab}>
+      {categories.map((category) => (
         <button
+          key={category._id}
           type="button"
-          className={`${styles.list} ${active === 'men' ? styles.active : ''}`}
-          onClick={() => onChangeTab('men')}
+          className={`${styles.list} ${active === category._id ? styles.active : ''}`}
+          onClick={() => onChangeTab(category._id)}
         >
-          Men
+          {category.name}
         </button>
-        <button
-          type="button"
-          className={`${styles.list} ${active === 'women' ? styles.active : ''}`}
-          onClick={() => onChangeTab('women')}
-        >
-          Women
-        </button>
-      </div>
-    </>
+      ))}
+    </div>
   );
 };
 

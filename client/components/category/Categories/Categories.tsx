@@ -1,32 +1,48 @@
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 
 import { Category } from '@/types';
-
 import styles from './Categories.module.css';
 
-interface Props {
+interface CategoriesProps {
   categories: Category[];
 }
 
-const Categories = ({ categories }: Props) => {
-  return (
-    <ul className={styles.categoryContainer}>
-      {categories.map((category) => (
-        <li className={styles.list} key={category._id}>
-          <Link href={`/search?category=${category.name.toLowerCase()}`}>
-            <a>
+const Categories: React.FC<CategoriesProps> = ({ categories }) => {
+  const renderCategories = () => {
+    return categories.map((category) => {
+      const [firstWord, ...rest] = category.name.split(' ');
+      const secondLine = rest.join(' ');
+
+      return (
+        <div key={category._id} className={styles.collageItem}>
+          <Link href={`/search?category=${category._id}`}>
+            <a className={styles.categoryLink}>
               <div className={styles.categoryImgWrapper}>
-                <Image alt={category.name} src={category.imageURL} layout="fill" />
+                <Image
+                  alt={category.name}
+                  src={category.imageURL}
+                  layout="fill"
+                  objectFit="cover"
+                />
+                <div className={styles.descriptionOverlay}>
+                  <p className={styles.description}>{category.description}</p>
+                </div>
               </div>
-              <p className={styles.name}>{category.name}</p>
+              <p className={styles.name}>
+                {firstWord}
+                <br />
+                {secondLine}
+              </p>
             </a>
           </Link>
-        </li>
-      ))}
-    </ul>
-  );
+        </div>
+      );
+    });
+  };
+
+  return <div className={styles.collageContainer}>{renderCategories()}</div>;
 };
 
 export default Categories;

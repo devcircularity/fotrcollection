@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import { Cart, Order } from '../models';
 import { User as UserType } from '../types';
-import { createPaymentIntent } from '../lib/stripe';
-import { client } from '../lib/paypal';
-const paypal = require('@paypal/checkout-server-sdk');
+import { authenticatePesapal, submitPesapalOrder } from '../lib/pesapal';
 
 const getCart = async (req: Request) => {
   const user = req.user as UserType;
@@ -40,71 +38,58 @@ const createOrder = async (
   return order;
 };
 
-export const createStripeCharge = async (req: Request, res: Response) => {
+export const createPesapalTransaction = async (req: Request, res: Response) => {
   const user = req.user as UserType;
-  const { paymentMethodId } = req.body;
   try {
+    const token = await authenticatePesapal();
     const totalAmount = await calculateCartTotal(req);
-    await createPaymentIntent(totalAmount, paymentMethodId);
-    const order = await createOrder(user._id, totalAmount, 'stripe');
-    res.status(200).json({ data: order });
-  } catch (error) {
-    res
-      .status(500)
-      .send({ message: 'Unexpected error occured. Please try again later.' });
-  }
-};
 
-export const createPaypalTransaction = async (req: Request, res: Response) => {
-  const total = await calculateCartTotal(req);
-  const request = new paypal.orders.OrdersCreateRequest();
-  request.prefer('return=representation');
-  request.requestBody({
-    intent: 'CAPTURE',
-    purchase_units: [
-      {
-        amount: {
-          currency_code: 'PHP',
-          value: total,
-        },
+    console.log('Total Amount:', totalAmount);
+    console.log('User Details:', user);
+
+    const requestBody = {
+      id: `ORDER_${Date.now()}`,
+      currency: 'USD',
+      amount: totalAmount.toFixed(2),
+      description: 'Payment description goes here',
+      callback_url: 'https://your-production-callback-url.com/payment-complete', // Update to production callback URL
+      notification_id: process.env.PESAPAL_NOTIFICATION_ID,
+      branch: 'Store Name - HQ',
+      billing_address: {
+        email_address: user.email,
+        phone_number: user.phoneNumber,
+        country_code: 'US', // Retrieve from user profile if needed
+        first_name: user.name,
       },
-    ],
-  });
+    };
 
-  let order;
-  try {
-    order = await client().execute(request);
-  } catch (err) {
-    return res
-      .status(500)
-      .send({ message: 'Unexpected error occured. Please try again later.' });
+    const pesapalResponse = await submitPesapalOrder(token, user._id, requestBody);
+
+    console.log('Pesapal Response:', pesapalResponse);
+
+    if (pesapalResponse.error) {
+      console.error('Pesapal Error:', pesapalResponse.error);
+      return res.status(400).json({
+        message: pesapalResponse.error.message || 'An error occurred with Pesapal payment. Please try again later.',
+      });
+    }
+
+    const { order_tracking_id, merchant_reference, redirect_url } = pesapalResponse;
+
+    if (!order_tracking_id) {
+      throw new Error('Missing order_tracking_id in Pesapal response');
+    }
+
+    console.log('Pesapal order_tracking_id:', order_tracking_id);
+
+    res.status(200).json({
+      data: {
+        order_tracking_id,
+        redirect_url,
+      },
+    });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    res.status(500).send({ message: 'Unexpected error occurred. Please try again later.' });
   }
-
-  res.status(200).json({
-    data: {
-      orderID: order.result.id,
-    },
-  });
-};
-
-export const capturePaypalTransaction = async (req: Request, res: Response) => {
-  const user = req.user as UserType;
-  const orderID = req.body.orderID;
-
-  // 3. Call PayPal to capture the order
-  const request = new paypal.orders.OrdersCaptureRequest(orderID);
-  request.requestBody({});
-
-  try {
-    const capture = await client().execute(request);
-    const amount =
-      capture.result.purchase_units[0].payments.captures[0].amount.value;
-
-    await createOrder(user._id, amount, 'paypal');
-  } catch (err) {
-    return res.send(500);
-  }
-
-  // 6. Return a successful response to the client
-  res.send(200);
 };

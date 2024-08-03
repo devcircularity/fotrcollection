@@ -13,25 +13,31 @@ class APIFeatures {
 
   filter() {
     let queryObj = { ...this.queryString };
-    const excludedFields = ["page", "sort", "limit", "fields", "keyword"];
+    const excludedFields = ["page", "sort", "limit", "fields", "keyword", "gender"]; // Include "gender" in excludedFields
     excludedFields.forEach((el) => delete queryObj[el]);
-
+  
     // keyword
     if (this.queryString.keyword) {
       queryObj = { ...queryObj, $text: { $search: this.queryString.keyword } };
     }
-
-    // 1B) Advanced filtering
+  
+    // gender
+    if (this.queryString.gender) {
+      queryObj = { ...queryObj, gender: this.queryString.gender };
+    }
+  
+    // Advanced filtering
     let queryStr = JSON.stringify(queryObj);
-
+  
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
+  
     this.query = this.query.find(JSON.parse(queryStr));
-
+  
     this.model = this.model.find(JSON.parse(queryStr));
-
+  
     return this;
   }
+  
 
   count() {
     this.total = this.model.countDocuments();

@@ -22,6 +22,7 @@ export const productGenerator = (overrides?: Overrides) => {
     price: Number(faker.commerce.price()),
     category: faker.lorem.word(1),
     description: faker.lorem.sentences(2),
+    gender: faker.helpers.randomize(['male', 'female', 'unisex']), // Adding gender field
     ...overrides,
   };
 };
@@ -40,6 +41,7 @@ export const categoryGenerator = (overrides?: Overrides) => {
     _id: faker.datatype.uuid(),
     imageURL: faker.image.imageUrl(),
     name: faker.commerce.productName(),
+    description: faker.lorem.sentence(), // Adding description property
     ...overrides,
   };
 };
@@ -47,7 +49,7 @@ export const categoryGenerator = (overrides?: Overrides) => {
 export const cartItemGenerator = (overrides?: Overrides, productOverrides?: Overrides) => {
   return {
     _id: faker.datatype.uuid(),
-    product: productGenerator(productOverrides),
+    product: productGenerator(productOverrides), // Use updated productGenerator
     quantity: faker.datatype.number(99),
     ...overrides,
   };

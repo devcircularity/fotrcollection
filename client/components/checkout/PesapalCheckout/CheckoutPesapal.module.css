@@ -1,0 +1,16 @@
+/* CheckoutPesapal.module.css */
+
+.pesapalButton {
+  /* Add your desired styles for the Pesapal button here */
+  background-color: #008000; /* Green color, you can change it */
+  color: #fff; /* White text */
+  padding: 10px 70px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pesapalButton:hover {
+  background-color: #006400; /* Darker green on hover */
+}

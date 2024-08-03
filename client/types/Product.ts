@@ -3,6 +3,7 @@ export type Product = {
   name: string;
   imageURL: string;
   category: string;
+  gender: string;
   description: string;
   price: number;
 };
@@ -23,6 +24,7 @@ export interface AddProduct {
   price: number;
   description: string;
   category: string;
+  gender: string;
 }
 
 export interface AddProductData {

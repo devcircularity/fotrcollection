@@ -1,6 +1,5 @@
-import Router, { useRouter } from 'next/router';
 import React from 'react';
-
+import Router, { useRouter } from 'next/router';
 import { SearchBar, Meta, MobileBottomMenu } from '@/components/core';
 import { ProductList, ProductListSkeleton } from '@/components/product';
 import { SearchFilter, SearchCategory } from '@/components/search';
@@ -11,15 +10,25 @@ import styles from '@/styles/Search.module.css';
 const Search = () => {
   const { query, pathname } = useRouter();
   const category = query.category as string;
-  const keyword = query.keyword as string;
   const sort = query.sort as string;
 
-  const { data, error, isLoading } = useSearch({ category, keyword, sort });
+  const { data, error, isLoading } = useSearch({
+    category,
+    gender: query.gender as string | undefined,
+  });
 
   const products = data || [];
 
   const handleTabChange = (selected: string) => {
-    Router.push({ pathname, query: { ...query, category: selected } });
+    let updatedQuery = { ...query };
+
+    if (selected === 'men') {
+      updatedQuery = { ...updatedQuery, gender: 'men' };
+    } else if (selected === 'women') {
+      updatedQuery = { ...updatedQuery, gender: 'women' };
+    }
+
+    Router.push({ pathname, query: updatedQuery });
   };
 
   const handleFilterChange = (selected: string) => {

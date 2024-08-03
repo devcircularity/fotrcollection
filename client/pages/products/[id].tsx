@@ -17,7 +17,7 @@ import { Product as ProductTypes } from '@/types';
 import formatPrice from '@/utils/formatPrice';
 
 interface Props {
-  product: ProductTypes;
+  product: ProductTypes | null;
   relatedProducts: ProductTypes[];
   error?: string;
 }
@@ -28,6 +28,10 @@ const Product = ({ product, relatedProducts, error }: Props) => {
   const { data: currentUser } = useUser();
   const { isOpen, showToast } = usePopUp();
   const { setToast } = useToast();
+
+  if (error || !product) {
+    return <ErrorMessage message={error || 'Product not found'} />;
+  }
 
   const handleChangeInputQty = (value: string | number) => {
     if (Number(value) > 10) {
@@ -40,13 +44,13 @@ const Product = ({ product, relatedProducts, error }: Props) => {
 
   const handleButtonChangeQty = (action: string) => {
     if (action === 'add') {
-      if (qty >= 10) {
+      if (Number(qty) >= 10) {
         setToast('error', 'Ops you can add to cart up to 10 max only');
         return;
       }
       setQty((qty) => Number(qty) + 1);
     } else {
-      if (qty > 1) setQty((qty) => Number(qty) - 1);
+      if (Number(qty) > 1) setQty((qty) => Number(qty) - 1);
     }
   };
 
@@ -58,7 +62,7 @@ const Product = ({ product, relatedProducts, error }: Props) => {
       }
       await addToCart(product._id, Number(qty));
       showToast();
-    } catch (error) {
+    } catch (error: any) {
       setToast('error', error.message);
     }
   };
@@ -68,10 +72,6 @@ const Product = ({ product, relatedProducts, error }: Props) => {
       setQty(1);
     }
   };
-
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
 
   return (
     <>
@@ -139,20 +139,25 @@ export async function getStaticProps({ params }: GetStaticPropsContext<{ id: str
       props: {
         product: null,
         relatedProducts: [],
-        error: 'Unexpected error occured. Please try again later.',
+        error: 'Unexpected error occurred. Please try again later.',
       },
     };
   }
 }
 
 export async function getStaticPaths() {
-  const products = await ProductService.getProducts();
+  try {
+    const products = await ProductService.getProducts({ page: 1, limit: 100 }); // Ensure you have a limit
 
-  const paths = products.map((product) => ({
-    params: { id: product._id },
-  }));
+    const paths = products.map((product) => ({
+      params: { id: product._id },
+    }));
 
-  return { paths, fallback: 'blocking' };
+    return { paths, fallback: 'blocking' };
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return { paths: [], fallback: 'blocking' };
+  }
 }
 
 export default Product;

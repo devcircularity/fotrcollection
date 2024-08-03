@@ -9,10 +9,10 @@ interface Props {
 
 const Meta = ({
   title = 'Buy best and quality products',
-  description = 'Dress Shop | Buy best and quality products',
+  description = 'FOTR Collection | Buy best and quality products',
   image = 'https://dress-shop.vercel.app/featured.png',
 }: Props) => {
-  const siteTitle = `Dress Shop | ${title}`;
+  const siteTitle = `FOTR Collection | ${title}`;
 
   return (
     <Head>

@@ -8,6 +8,7 @@ export interface ProductDocument extends Document {
   imageURL: string;
   category: string;
   description: string;
+  gender: string;
 }
 
 const productSchema = new Schema(
@@ -16,7 +17,9 @@ const productSchema = new Schema(
     price: Number,
     imageURL: String,
     category: String,
+    gender: String,
     description: String,
+    
   },
   {
     timestamps: true,

@@ -38,9 +38,31 @@ export const capturePaypalTransaction = async (orderID: string): Promise<void> =
     throw new Error(catchError(error));
   }
 };
+export const createPesapalTransaction = async (): Promise<{
+  order_tracking_id: string;
+  redirect_url: string;
+}> => {
+  try {
+    const url = `/checkout/create-pesapal-transaction`;
+    const { data } = await apiClient.post(url);
+
+    // Log the entire response to the console for debugging
+    console.log('Pesapal Transaction:', data);
+
+    const { order_tracking_id, redirect_url } = data.data; // Adjust to match the structure
+
+    return {
+      order_tracking_id,
+      redirect_url,
+    };
+  } catch (error) {
+    throw new Error(catchError(error));
+  }
+};
 
 export const CheckOutService = {
   createPaypalTransaction,
   capturePaypalTransaction,
   stripeCharge,
+  createPesapalTransaction, // Add this line
 };

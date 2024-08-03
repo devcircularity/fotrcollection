@@ -1,3 +1,4 @@
+// Import necessary modules and types
 import { Request, Response } from 'express';
 import { Product } from '../models';
 import APIFeatures from '../utils/ApiFeatures';
@@ -5,21 +6,39 @@ import { Cloudinary } from '../lib/cloudinary';
 
 export const index = async (req: Request, res: Response) => {
   try {
-    const features = new APIFeatures(Product.find(), Product, req.query)
+    const { category, gender } = req.query;
+    
+    const baseQuery = Product.find();
+
+    if (category) {
+      baseQuery.where('category').equals(decodeURIComponent(category as string));
+    }
+
+    if (gender) {
+      baseQuery.where('gender').equals(gender as string);
+    }
+
+    // Use the APIFeatures class for filtering, sorting, limiting, and pagination
+    const features = new APIFeatures(baseQuery, Product, req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
 
+    // Execute the query
     const products = await features.query;
 
+    // Get the total count of products
     const total = await features.count().total;
 
+    // Send the response
     res.status(200).json({ data: { total, count: products.length, products } });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error in getting products' });
   }
 };
+
 
 export const show = async (req: Request, res: Response) => {
   try {
@@ -42,7 +61,7 @@ export const show = async (req: Request, res: Response) => {
 
 export const store = async (req: Request, res: Response) => {
   try {
-    const { name, price, description, image, category } = req.body;
+    const { name, price, description, image, category, gender } = req.body;
 
     // upload base64 image to cloudinary
     const imageURL = await Cloudinary.upload(image, 'products', {
@@ -56,6 +75,7 @@ export const store = async (req: Request, res: Response) => {
       description,
       imageURL,
       category,
+      gender,
     });
 
     res.status(200).json({ data: { product } });
