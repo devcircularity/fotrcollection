@@ -1,6 +1,6 @@
 // Import necessary modules and types
 import { Request, Response } from 'express';
-import { Product } from '../models';
+import { Product, Category } from '../models';
 import APIFeatures from '../utils/ApiFeatures';
 import { Cloudinary } from '../lib/cloudinary';
 
@@ -11,7 +11,11 @@ export const index = async (req: Request, res: Response) => {
     const baseQuery = Product.find();
 
     if (category) {
-      baseQuery.where('category').equals(decodeURIComponent(category as string));
+      // Map category name to category ID
+      const categoryDoc = await Category.findOne({ name: decodeURIComponent(category as string) });
+      if (categoryDoc) {
+        baseQuery.where('category').equals(categoryDoc._id);
+      }
     }
 
     if (gender) {

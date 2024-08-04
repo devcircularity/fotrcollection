@@ -19,7 +19,6 @@ const productSchema = new Schema(
     category: String,
     gender: String,
     description: String,
-    
   },
   {
     timestamps: true,

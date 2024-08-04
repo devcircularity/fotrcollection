@@ -3,8 +3,8 @@ import { Schema, model, Document } from 'mongoose';
 const { String } = Schema.Types;
 
 export interface CategoryDocument extends Document {
-  name: String;
-  imageURL: String;
+  name: string;
+  imageURL: string;
 }
 
 const CategorySchema = new Schema(
