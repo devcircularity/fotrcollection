@@ -11,7 +11,7 @@ interface ShareModalProps {
 const ShareModal: React.FC<ShareModalProps> = ({ open, onClose, productId }) => {
   if (!open) return null;
 
-  const shareUrl = `https://fotrshop.catolekinoti.co.ke/products/${productId}`;
+  const shareUrl = `https://shop.fotrapp.com/products/${productId}`;
 
   const handleShare = (platform: string) => {
     switch (platform) {
