@@ -1,0 +1,71 @@
+.categoryContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.collageContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.collageItem {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.categoryLink {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.categoryImgWrapper {
+  position: relative;
+  width: 100%;
+  height: 500px; /* Increased height for longer images */
+  overflow: hidden;
+}
+
+.categoryImgWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.descriptionOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.collageItem:hover .descriptionOverlay {
+  opacity: 0.9;
+}
+
+.name {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.9rem;
+}

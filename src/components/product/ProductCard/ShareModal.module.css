@@ -1,0 +1,56 @@
+.shareModal {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Adds a background overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 1rem;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.closeButton:hover {
+  color: #000;
+}
+
+.shareContainer {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.shareOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 1rem; /* Added padding to space out the items */
+}
+
+.shareOption span {
+  font-size: 0.8rem; /* Reduced text size by 20% */
+}
