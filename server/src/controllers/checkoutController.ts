@@ -49,7 +49,7 @@ export const createPesapalTransaction = async (req: Request, res: Response) => {
 
     const requestBody = {
       id: `ORDER_${Date.now()}`,
-      currency: 'USD',
+      currency: 'KES',
       amount: totalAmount.toFixed(2),
       description: 'Payment description goes here',
       callback_url: 'https://your-production-callback-url.com/payment-complete', // Update to production callback URL
