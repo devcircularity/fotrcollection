@@ -10,3 +10,9 @@
     grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .productGrid {
+    padding-bottom: 10rem; /* Adjust this value based on the height of your bottom navigation bar */
+  }
+}
