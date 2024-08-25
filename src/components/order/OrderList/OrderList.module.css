@@ -1,66 +1,98 @@
 .ordersContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   padding: 1rem;
+  background-color: var(--color-white); /* Use white for the background */
 }
 
-.list {
-  margin-top: 2rem;
-  border-bottom: 1px solid #d5d5d5;
-}
-
-.productWrapper {
+.orderCard {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: var(--color-white); /* Use your theme color */
 }
 
-.date {
-  font-size: 1.7rem;
-}
-
-.dateText {
-  color: gray;
-  padding: 0 0.5rem;
-}
-
-.productInfo {
-  flex: 1;
-  padding: 0 2rem;
-  font-size: 1.6rem;
+.productCard {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start; /* Align items to the top to accommodate taller image */
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+.productImage {
+  border-radius: 8px;
+  height: 150px; /* Adjusted height for a longer image */
+  width: auto; /* Ensure the width adjusts to maintain aspect ratio */
+}
+
+.productDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center; /* Center content vertically beside the taller image */
 }
 
 .productName {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: bold;
   color: var(--color-dark);
 }
 
-.productPrice {
-  font-size: 1.8rem;
-  color: var(--color-primary);
-}
-
-.productList {
-  margin-top: 2rem;
-}
-
-.totalText {
-  font-size: 2rem;
-  padding-right: 1rem;
-}
-
-.totalPrice {
-  color: var(--color-primary);
-  font-weight: 600;
-  font-size: 3rem;
-}
-
-.orderBottom {
-  padding: 2rem 2rem;
+.orderInfo {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 1.4rem;
+  color: var(--color-gray);
+}
+
+.orderNumber {
+  color: var(--color-dark);
+  font-weight: bold;
+}
+
+.orderStatus {
+  color: var(--color-primary); /* Text color to red for your theme */
+  font-weight: bold;
+}
+
+.orderDate {
+  color: var(--color-gray); /* Adjust to your theme color */
+}
+
+.orderFooter {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.orderTotal {
+  font-size: 1.4rem;
+  color: var(--color-dark);
+  font-weight: bold;
+}
+
+.detailsLink {
+  color: var(--color-primary); /* Use your theme primary color (red) */
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.detailsLink:hover {
+  text-decoration: underline;
 }
 
 .msg {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.8rem;
+  color: var(--color-dark);
 }

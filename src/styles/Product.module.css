@@ -15,7 +15,7 @@
 
 .coverImg {
   position: relative;
-  padding-bottom: 80%;
+  padding-bottom: 120%; /* Increased padding to make the image taller */
 }
 
 .img {
@@ -26,6 +26,25 @@
   left: 0;
   object-fit: cover;
   background-color: var(--color-gray-light);
+}
+
+.imagePreviews {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+.preview {
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.preview img {
+  width: 250px; /* Increased width */
+  height: 380px; /* Increased height */
+  border-radius: 4px;
+  border: 1px solid var(--color-gray-light);
+  object-fit: cover;
 }
 
 .productAction {
@@ -69,15 +88,20 @@
 }
 
 @media only screen and (min-width: 1024px) {
-  .main,
-  .productInfo {
+  .main {
     flex-basis: 50%;
     margin-bottom: 2rem;
     padding: 2rem 2rem 2rem 0;
   }
 
+  .productInfo {
+    flex-basis: 50%;
+    margin-bottom: 2rem;
+    padding: 2rem 0 2rem 2rem;
+  }
+
   .coverImg {
-    padding-bottom: 100%;
+    padding-bottom: 150%; /* Further increased padding for larger images */
   }
 
   .heading {
@@ -86,5 +110,10 @@
 
   .btnAddCart {
     margin: 0 20px 0 40px;
+  }
+
+  .imagePreviews {
+    justify-content: flex-start;
+    margin-top: 2rem;
   }
 }

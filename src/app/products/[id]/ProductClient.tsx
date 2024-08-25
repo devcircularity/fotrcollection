@@ -1,9 +1,8 @@
-// src/app/products/[id]/ProductClient.tsx
 'use client';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Meta, MobileBottomMenu } from '@/components/core';
 import { ProductList, ProductInputQuantity } from '@/components/product';
@@ -25,11 +24,23 @@ interface Props {
 
 const ProductClient = ({ product, relatedProducts, error }: Props) => {
   const [qty, setQty] = useState<string | number>(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for current image index
   const { addToCart, addingToCart } = useAddItem();
   const { data: currentUser } = useUser();
   const { isOpen, showToast } = usePopUp();
   const { setToast } = useToast();
   const router = useRouter();
+
+  const images = product?.images && product.images.length > 0 ? product.images : [product?.imageURL || '']; // Ensure fallback to an empty string
+
+  useEffect(() => {
+    if (images.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 3000); // Change image every 3 seconds
+      return () => clearInterval(interval);
+    }
+  }, [images.length]);
 
   if (error || !product) {
     return <ErrorMessage message={error || 'Product not found'} />;
@@ -75,9 +86,13 @@ const ProductClient = ({ product, relatedProducts, error }: Props) => {
     }
   };
 
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
   return (
     <>
-      <Meta title={product.name} description={product.description} image={product.imageURL} />
+      <Meta title={product.name} description={product.description} image={images[currentImageIndex] || ''} />
       <Container>
         <PopUp isOpen={isOpen} message={`Successfully added to cart`} />
         <div className={styles.productContainer}>
@@ -86,8 +101,8 @@ const ProductClient = ({ product, relatedProducts, error }: Props) => {
               <Image
                 className={styles.img}
                 fill
-                src={product.imageURL}
-                alt={product.name}
+                src={images[currentImageIndex] || ''} // Ensure fallback to an empty string
+                alt={product.name || 'Product Image'}
               />
             </div>
           </div>
@@ -116,6 +131,13 @@ const ProductClient = ({ product, relatedProducts, error }: Props) => {
                 disabled={addingToCart}
                 loading={addingToCart}
               />
+            </div>
+            <div className={styles.imagePreviews}>
+              {images.slice(0, 2).map((img, index) => (
+                <div key={index} className={styles.preview} onClick={() => handleImageClick(index)}>
+                  <Image src={img || ''} alt={`Preview ${index + 1}`} width={100} height={100} />
+                </div>
+              ))}
             </div>
           </div>
         </div>

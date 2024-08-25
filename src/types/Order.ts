@@ -1,4 +1,4 @@
-// order.ts
+// types/order.ts
 import { Product } from './Product';
 
 export interface Item {
@@ -11,4 +11,6 @@ export type Order = {
   total: number;
   items: Item[];
   createdAt: Date;
+  paymentStatus: string; // Payment status field
+  deliveryStatus: string; // Delivery status field
 };

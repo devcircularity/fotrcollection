@@ -1,39 +1,80 @@
 .productList {
   display: flex;
   margin-top: 2rem;
+  align-items: center; /* Align items vertically centered */
+  justify-content: space-between; /* Distribute space between items */
 }
 
 .product {
   display: flex;
   width: 100%;
+  align-items: center; /* Align items vertically centered */
+}
+
+.cartHeader {
+  display: flex;
+  justify-content: space-between; /* Ensure headers are spaced correctly */
+  padding-bottom: 1rem; /* Add spacing below headers */
+  border-bottom: 1px solid var(--color-gray-light); /* Add a bottom border for clarity */
+}
+
+.cartHeader div {
+  flex: 1;
+  text-align: center; /* Center align the headers */
+  font-weight: bold; /* Make headers bold */
+}
+
+.cartHeaderProduct {
+  flex: 2; /* Adjust flex to take more space for the product column */
+  text-align: left; /* Left-align the product header */
+}
+
+.cartHeaderLbl {
+  flex: 1;
+  text-align: center;
 }
 
 .productInfo {
-  flex: 1;
+  flex: 2; /* Adjust flex to match the product header */
   padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .productContent {
   flex: 1;
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .productName {
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   font-weight: 600;
-  width: 20rem;
+  margin-bottom: 0.5rem;
 }
 
 .productImg {
   width: 12rem;
-  height: 12rem;
+  height: 16rem;
   overflow: hidden;
+  margin-right: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .productImg img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+.productPrice,
+.productQty,
+.productAction {
+  text-align: center; /* Center-align the text within these columns */
 }
 
 .productPrice {
@@ -47,8 +88,7 @@
 
 .productAction {
   display: flex;
-  flex: 1;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
@@ -69,6 +109,7 @@
   color: var(--color-primary);
   margin-top: 0;
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .updating {
@@ -79,6 +120,9 @@
   .productInfo {
     display: flex;
     padding: 0 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .productInfo .productContent {
@@ -87,5 +131,10 @@
 
   .productAction {
     justify-content: flex-end;
+  }
+
+  .productName {
+    width: auto;
+    margin-right: 1rem;
   }
 }

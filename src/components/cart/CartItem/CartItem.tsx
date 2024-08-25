@@ -1,3 +1,5 @@
+'use client';
+
 import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -25,6 +27,11 @@ const CartItem = ({ cartItem }: Props) => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const total = formatPrice(parseFloat((cartItem.product.price * cartItem.quantity).toFixed(2)));
+
+  // Use the first image in the array or fallback to imageURL
+  const imageUrl = cartItem.product.images && cartItem.product.images.length > 0
+    ? cartItem.product.images[0]
+    : cartItem.product.imageURL;
 
   const handleRemoveCart = async () => {
     try {
@@ -97,7 +104,7 @@ const CartItem = ({ cartItem }: Props) => {
         <div className={styles.productImg}>
           <Link href={`/products/${cartItem.product._id}`}>
             <Image
-              src={cartItem.product.imageURL}
+              src={imageUrl || ''}
               alt={cartItem.product.name}
               width={150}
               height={150}

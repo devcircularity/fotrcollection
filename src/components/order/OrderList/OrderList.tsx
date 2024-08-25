@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Spinner, ErrorMessage } from '@/components/ui';
 import useOrders from '@/hooks/orders/use-orders';
@@ -13,6 +13,12 @@ import styles from './OrderList.module.css';
 const OrderList = () => {
   const { data, isLoading, error } = useOrders();
 
+  useEffect(() => {
+    if (data) {
+      console.log('Orders data:', data);
+    }
+  }, [data]);
+
   if (error) {
     return <ErrorMessage message={error} />;
   }
@@ -24,54 +30,55 @@ const OrderList = () => {
   }
 
   return (
-    <div>
+    <div className={styles.ordersContainer}>
       {orders.length > 0 ? (
-        <ul className={styles.ordersContainer}>
-          {orders.map((order: Order) => (
-            <li key={order._id} className={styles.list}>
-              <div>
-                <div className={styles.date}>
-                  Date Ordered:
-                  <span className={styles.dateText}>{formatDate(order.createdAt)}</span>
-                </div>
-                <div className="products">
-                  {order.items.map((orderItem) => (
-                    <div key={orderItem.product._id} className={styles.productList}>
-                      <div className={styles.productWrapper}>
-                        <Link href={`/products/${orderItem.product._id}`}>
-                          <Image
-                            src={orderItem.product.imageURL}
-                            alt={orderItem.product.name}
-                            width={150}
-                            height={150}
-                          />
-                        </Link>
+        orders.map((order: Order) => (
+          <div key={order._id} className={styles.orderCard}>
+            {order.items.map((orderItem) => {
+              const imageUrl =
+                Array.isArray(orderItem.product.images) && orderItem.product.images.length > 0
+                  ? orderItem.product.images[0]
+                  : ''; // Default to an empty string if no images are found
 
-                        <div className={styles.productInfo}>
-                          <div>
-                            <Link href={`/products/${orderItem.product._id}`}>
-                              <div className={styles.productName}>{orderItem.product.name}</div>
-                            </Link>
-                            <div className={styles.productQuantity}>x {orderItem.quantity}</div>
-                          </div>
-                          <div className={styles.productPrice}>
-                            {formatPrice(orderItem.product.price * orderItem.quantity)}
-                          </div>
-                        </div>
+              return (
+                <div key={orderItem.product._id} className={styles.productCard}>
+                  {/* Image Section */}
+                  <Link href={`/products/${orderItem.product._id}`}>
+                    <Image
+                      src={imageUrl}
+                      alt={orderItem.product.name}
+                      width={100}
+                      height={100}
+                      className={styles.productImage}
+                    />
+                  </Link>
+
+                  {/* Details Section */}
+                  <div className={styles.productDetails}>
+                    <Link href={`/products/${orderItem.product._id}`}>
+                      <div className={styles.productName}>{orderItem.product.name}</div>
+                    </Link>
+                    <div className={styles.orderInfo}>
+                      <div className={styles.orderNumber}>Order #{order._id}</div>
+                      <div className={styles.orderStatus}>
+                        {order.deliveryStatus === 'delivered' ? 'DELIVERED' : order.deliveryStatus.toUpperCase()}
                       </div>
+                      <div className={styles.orderDate}>Placed on {formatDate(order.createdAt)}</div>
                     </div>
-                  ))}
+                  </div>
                 </div>
-                <div className={styles.orderBottom}>
-                  <span className={styles.totalText}>Order Total:</span>
-                  <span className={styles.totalPrice}>{formatPrice(order.total)}</span>
-                </div>
+              );
+            })}
+            <div className={styles.orderFooter}>
+              <div className={styles.orderTotal}>
+                Total: {formatPrice(order.total)}
               </div>
-            </li>
-          ))}
-        </ul>
+              
+            </div>
+          </div>
+        ))
       ) : (
-        <div className={styles.msg}> You have no orders yet.</div>
+        <div className={styles.msg}>You have no orders yet.</div>
       )}
     </div>
   );

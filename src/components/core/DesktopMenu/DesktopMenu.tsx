@@ -24,7 +24,7 @@ const DesktopMenu = () => {
   const { data: currentUser } = useUser();
   const logout = useLogout();
 
-  const { data } = useCart();
+  const { data: cartData, isLoading } = useCart();  // Updated hook usage
   const { theme, setTheme } = useTheme();
   const router = useRouter();
 
@@ -70,20 +70,29 @@ const DesktopMenu = () => {
     setTheme(selectedTheme);
   };
 
+  // Helper function to calculate the total number of items
+  const getTotalItems = () => {
+    return cartData?.items.reduce((total, item) => total + item.quantity, 0) || 0;
+  };
+
   return (
     <div className={`${styles.desktopMenu} ${styles.headerItem}`}>
-      <div className={styles.searchContainer}>
-        <SearchBar onSubmit={handleSearchSubmit} />
+  <div className={styles.searchContainer}>
+    <SearchBar onSubmit={handleSearchSubmit} />
+  </div>
+  <div className={styles.cartContainer}>
+    <Link href="/cart" className={styles.link}>
+      <div className={styles.cartIconWrapper}> {/* New wrapper around the icon and counter */}
+        <IoMdCart size={30} />
+        {currentUser && !isLoading && getTotalItems() > 0 && (
+          <div className={styles.cartNum}>{getTotalItems()}</div>
+        )}
       </div>
-      <div>
-        <Link href="/cart" className={styles.link}>
-          <IoMdCart size={30} />
-          Cart
-          {currentUser && data && data.items.length > 0 && (
-            <div className={styles.cartNum}>{data.items.length}</div>
-          )}
-        </Link>
-      </div>
+      <span className={styles.cartText}>Cart</span> {/* Updated with new class */}
+    </Link>
+  </div>
+
+
       {currentUser ? (
         <div ref={dropdownRef} className={styles.userContainer}>
           <div
@@ -155,7 +164,7 @@ const DesktopMenu = () => {
           )}
         </div>
       ) : (
-        <div ref={dropdownRef}>
+        <div className={styles.authLinksContainer} ref={dropdownRef}>
           <Link href="/signup">Sign Up</Link>
           <span className={styles.line}> | </span>
           <Link href="/login">Log In</Link>

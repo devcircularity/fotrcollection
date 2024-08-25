@@ -5,6 +5,8 @@
 
 .desktopMenu {
   display: none;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .headerItem li {
@@ -27,7 +29,7 @@
 }
 
 .line {
-  padding: 0 1rem;
+  margin: 0 1rem;
 }
 
 .searchContainer {
@@ -41,7 +43,7 @@
   height: 2.5rem;
   position: absolute;
   top: -0.5rem;
-  left: 3rem;
+  left: 2.5rem;
   background-color: var(--color-primary);
   color: #fff;
   font-size: 1.4rem;
@@ -126,4 +128,41 @@
   .desktopMenu {
     display: flex;
   }
+}
+
+
+.cartContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: 2rem; /* Space between the cart section and other elements */
+}
+
+.cartIconWrapper {
+  position: relative; /* This will be the positioning context for .cartNum */
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem; /* Space between the cart icon and the text */
+}
+
+.cartNum {
+  width: 2.5rem;
+  height: 2.5rem;
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem; /* Adjust the position to align correctly with the cart icon */
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.cartText {
+  margin-left: 1.5rem; /* Additional margin to space out the "Cart" text from the icon */
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem; /* Adjust font size if necessary */
 }

@@ -19,6 +19,9 @@ interface Props {
 const ProductCard = ({ product }: Props) => {
   const [isShareModalOpen, setShareModalOpen] = useState(false);
 
+  // Use the first image in the array or fallback to imageURL
+  const imageUrl = product.images && product.images.length > 0 ? product.images[0] : product.imageURL;
+
   const handleShareClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setShareModalOpen(true);
@@ -33,7 +36,7 @@ const ProductCard = ({ product }: Props) => {
       <Link href={`/products/${product._id}`} className={styles.productLink}>
         <div className={styles.productCard}>
           <div className={styles.productImgWrapper}>
-            <Image src={product.imageURL} alt={product.name} layout="fill" objectFit="cover" />
+            <Image src={imageUrl || ''} alt={product.name} layout="fill" objectFit="cover" />
             <div className={styles.wishlistButtonContainer}>
               <WishlistButton productId={product._id} />
             </div>
